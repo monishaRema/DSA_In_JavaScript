@@ -6,6 +6,30 @@
 * It’s not exact time in seconds — just the growth trend (worst case).
 */
 
+
+// // test looping times
+
+// const startTime = performance.now();
+// for (let i = 0; i < 5000; i++) {
+//  console.log(i);
+// }
+
+// const endTime = performance.now();
+// console.log(`Execution time: ${endTime - startTime} milliseconds`);
+
+
+
+const set = new Set();
+
+const user = ["alice", "bob", "charlie", "dave", "eve","bob","alice","charlie","monisha","sharif","bob"];
+
+for(let i=0; i<user.length; i++){
+  
+    set.add(user[i]);
+  
+}
+console.log(set);
+
 let a = [1, 2, 3, 4, 5, 14, 16, 18, 20];
 let b = [6, 7, 8, 9, 10];
 
