@@ -210,3 +210,20 @@ const binnedEvents = events.reduce((bins, event) => {
 }, {});
 
 console.log("Binned events:", binnedEvents);
+
+
+
+const Interval = 30 * 60 * 1000;
+
+const getBiningTimestamp = (timestamp) => {
+  const date = new Date(timestamp);
+
+  console.log(date.getTime())
+}
+
+getBiningTimestamp("2025-10-22T10:01:00Z")
+
+
+
+
+ 
