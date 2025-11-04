@@ -67,3 +67,73 @@ console.log(makingTeaReacipe());
   ]
 }
 */
+
+// Input : madam output: madam
+// I can not reverse a string
+// i can reverse an array
+// i can convert a sting to array
+// i can convert an array to string
+
+function getPanimdrome(str) {
+  if (!str || typeof str != "string") {
+    console.log("please provide a valid string");
+    return;
+  }
+
+  let reversedStr = str.split("").reverse().join("");
+  console.log(reversedStr);
+
+  if (str === reversedStr) {
+    console.log(`${str} is a panigdrom String`);
+  } else {
+    console.log(`${str} is not a panigdrom String`);
+  }
+}
+
+getPanimdrome(8);
+
+// find the largeest number
+
+// input [ 2, 9, 1, 7, 3]
+// output : 9
+
+// process
+// loop => compare each item to my number (assumption)
+
+let assumption = 0;
+
+let input = [2, 9, 1, 7, 3];
+
+let output = Math.max(...input);
+
+console.log(output);
+
+input.forEach((n) => {
+  if (n > assumption) {
+    assumption = n;
+  }
+});
+
+console.log(assumption);
+
+let string = "hello world";
+
+function countVowels(str) {
+  if (!str) {
+    return console.log("Provide a valid string");
+  }
+
+  let vowel = ["a", "e", "i", "o", "u"];
+
+  let arr = str.split("");
+  let count = 0;
+
+  arr.forEach((c) => {
+    if (vowel.includes(c)) {
+      count++;
+    }
+  });
+
+  return count;
+}
+console.log(countVowels(string));
