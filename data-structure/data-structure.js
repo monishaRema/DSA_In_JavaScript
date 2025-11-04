@@ -186,102 +186,31 @@ console.log("Queue after enqueue operations =>", number);
 // dequeue removes the first value (3), demonstrating First-In-First-Out
 console.log("dequeue() removes the oldest value =>", number.dequeue());
 
-// Linklist
-// 🧩 1. Singly Linked List
-// -----------------------------
-//
-//  Each node points to the next node.
-//  The last node’s next is null (the list ends there).
-// Each node holds two things:
-//  1️⃣ Data (the value)
-//  2️⃣ A pointer (next) that refers to the next node in the list.
-//
-//  Structure of a Node:
-//
-//        Node
-//   ===================
-//  ||  Data  ||  Next => 
-//   ===================
-//
-//  Example of connection:
-//
-//   ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-//   │   Head (Node1)   │──▶──│   Node2          │──▶──│   Tail (Node3)   │──▶ null
-//   └──────────────────┘     └──────────────────┘     └──────────────────┘
-//
-//  🧠 Meaning:
-//  - Traverses in one direction only (head → tail).
-//  - Each node knows only who comes *next*.
-//  - Last node’s “next” points to null (end of the list).
-//  - You can traverse in one direction (forward only).
-//  - Simple and memory-efficient.
-//  - Used in stacks, queues, and basic linked data structures.
-
-// 🧩 2. Doubly Linked List
-// -----------------------------
-//
-// Each node points to both its next and previous node.
-// That means you can move forward ⟶ or backward ⟵ through the list.
-//
-// Each node holds three things:
-//  1️⃣ Data (the value)
-//  2️⃣ A pointer (next) that refers to the next node
-//  3️⃣ A pointer (prev) that refers to the previous node
-//
-//  Structure of a Node:
-//
-//             Node
-//   =================================
-//  || <- Prev ||  Data  ||  Next -> ||
-//   =================================
-//
-//  Example of connection:
-//
-//   null ◀──┌──────────────────┐◀────┌──────────────────┐◀────┌──────────────────┐──▶ null
-//            │  Head (Node1)   │===>│    Node2         │===> │  Tail (Node3)    │
-//            └─────────────────┘    └──────────────────┘     └──────────────────┘
-//
-//  🧠 Meaning:
-//  - Traverses in both directions (head ⇄ tail).
-//  - Each node knows both who comes *next* and who came *before*.
-//  - Uses slightly more memory because of the extra “prev” pointer.
-//  - Easier to navigate and delete nodes from both ends.
-//  - Used in browsers (back/forward), music playlists, undo/redo features.
-//
 
 
 
-// 🔁 3. Circular Linked List
-// -----------------------------
+// 🧩 Queue Implementation using Linked List
+// -----------------------------------------
 //
-//  Each node points to the next node,
-//  and the last node (tail) points back to the first node (head).
-//  So, it forms a continuous loop.
+// Why LinkedList instead of Array?
+//  - Array.shift() = O(n) because it re-indexes the entire array.
+//  - LinkedList.dequeue() = O(1) because we just move the head pointer.
+//  - enqueue() and dequeue() both O(1).
 //
-
-// Node hold the data and next
-
-//         Node
-//  ===================
-// || Data   || Next =>
-//  ===================
-//  Visualization:
+// FIFO = First In, First Out
 //
-//      ┌────────────┐      ┌────────────┐      ┌────────────┐
-//      │   Head     │──▶──▶│  Element   │──▶──▶│   Tail     │
-//      └────────────┘      └────────────┘      └────────────┘
-//            ▲                                         │
-//            │                                         │
-//            └─────────────────────────────────────────┘
+// Visualization:
 //
-//  🧠 Meaning:
-//  - Traversal never reaches null (it loops back to head).
-//  - Useful for round-robin scheduling, buffering, or playlist loops.
+//  Enqueue (add to tail)             Dequeue (remove from head)
+//  ┌────────────┐                    ┌────────────┐
+//  │ Front(head)│──▶──▶──▶──▶──▶──▶──│  Tail(end) │
+//  └────────────┘                    └────────────┘
+//      ▲                                   │
+//      │                                   ▼
+//     dequeue()                       enqueue()
 //
 
-
-
-
+// Node class for LinkedList
 class Node {
   constructor(value) {
     this.value = value;
@@ -289,64 +218,104 @@ class Node {
   }
 }
 
-class Linklist {
+// LinkedList-based Queue
+class QueueLinkList {
   constructor() {
-    this.head = null;
-    this.tail = null;
+    this.head = null; // Front of queue (oldest element)
+    this.tail = null; // Back of queue (newest element)
     this.length = 0;
   }
 
-  append(value) {
+  // enqueue() => Add item to the BACK of the queue
+  // -----------------------------------------------
+  // Steps:
+  // 1️⃣ Create new node
+  // 2️⃣ If queue is empty: head = tail = newNode
+  // 3️⃣ Else: tail.next = newNode; tail = newNode
+  enqueue(value) {
     const newNode = new Node(value);
 
-    // Check the linklist is empty
-    if (this.head == null) {
-      this.head = newNode;  // newNode is the head and tail both
+    if (this.isEmpty()) {
+      this.head = newNode; // first node = both head and tail
       this.tail = newNode;
     } else {
-      // if linklist is not empty
-      this.tail.next = newNode;  // Poinit the new value as next to tail
-      this.tail = newNode;      // Change the tail to newnode. Now newnode is the tail
+      this.tail.next = newNode; // link current tail to new node
+      this.tail = newNode; // update tail
     }
 
     this.length++;
   }
-  prepend(value) {
-    const newNode = new Node(value);
 
-    // Check the linklist is empty
-    if (this.head == null) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      // if linklist is not empty
-      newNode.next = this.head;  // newNode will point the next to the head
-      this.head = newNode;      // now the head will be the newNode
+  // dequeue() => Remove item from the FRONT of the queue
+  // ----------------------------------------------------
+  // Steps:
+  // 1️⃣ If empty → return undefined
+  // 2️⃣ Store the value of head
+  // 3️⃣ Move head pointer to next node
+  // 4️⃣ If queue becomes empty → tail = null
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined;
     }
 
-    this.length++;
+    const removedValue = this.head.value;
+    this.head = this.head.next;
+
+    // if we removed the last node
+    if (this.head === null) {
+      this.tail = null;
+    }
+
+    this.length--;
+    return removedValue;
   }
-  insert() {}
-  remove() {}
+
+  // peek() => View the front value without removing it
+  peek() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.head.value;
+  }
+
+  // isEmpty() => Check if queue has no elements
+  isEmpty() {
+    return this.length === 0;
+  }
+
+  // print() => visualize the linked structure
   print() {
-    let currentNode = this.head;
-    let res = [];
-    while (currentNode !== null) {
-      res.push(currentNode.value);
-      currentNode = currentNode.next;
+    let current = this.head;
+    const result = [];
+
+    while (current !== null) {
+      result.push(current.value);
+      current = current.next;
     }
-    console.log(res.join(" => "), "=> null");
+
+    console.log(result.join(" => "), "=> null");
   }
 }
 
-const linklist = new Linklist();
+// ✅ Demo
+const numberQueue = new QueueLinkList();
 
-linklist.append(1);
-linklist.append(2);
-linklist.append(3);
+console.log("dequeue() on empty queue =>", numberQueue.dequeue());
+console.log("isEmpty() right after creation =>", numberQueue.isEmpty());
 
-linklist.prepend(0);
-linklist.prepend(-1);
+numberQueue.enqueue(3);
+numberQueue.enqueue(6);
+numberQueue.enqueue(9);
 
-console.log(linklist.length);
-linklist.print();
+console.log("peek() shows the oldest value =>", numberQueue.peek());
+
+console.log("Queue after enqueue operations:");
+numberQueue.print();
+
+console.log("dequeue() removes the oldest value =>", numberQueue.dequeue());
+
+console.log("Queue after one dequeue:");
+numberQueue.print();
+
+console.log("Queue length =>", numberQueue.length);
+
