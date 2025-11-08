@@ -206,7 +206,7 @@ console.log("dequeue() removes the oldest value =>", number.dequeue());
 //  │ Front(head)│──▶──▶──▶──▶──▶──▶──│  Tail(end) │
 //  └────────────┘                    └────────────┘
 //      ▲                                   │
-//      │                                   ▼
+//     │                                   ▼
 //     dequeue()                       enqueue()
 //
 
@@ -254,16 +254,17 @@ class QueueLinkList {
   // 3️⃣ Move head pointer to next node
   // 4️⃣ If queue becomes empty → tail = null
   dequeue() {
-    if (this.isEmpty()) {
+   
+    if (this.isEmpty()) {                    // 1️⃣ If empty → return undefined
       return undefined;
     }
-
-    const removedValue = this.head.value;
-    this.head = this.head.next;
+    
+    const removedValue = this.head.value;    // 2️⃣ Store the value of head
+    this.head = this.head.next;              // 3️⃣ Move head pointer to next node
 
     // if we removed the last node
     if (this.head === null) {
-      this.tail = null;
+      this.tail = null;                      // 4️⃣ If queue becomes empty → tail = null
     }
 
     this.length--;
